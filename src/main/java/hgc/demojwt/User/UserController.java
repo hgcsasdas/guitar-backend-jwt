@@ -35,13 +35,13 @@ public class UserController {
 	}
 	
 	@PostMapping(value = "/find-user")
-	public ResponseEntity<UserDTO> getUserByUsername(@RequestBody FindUserRequest findUserRequest) {
-		UserDTO userDTO = userService.userIsUser(findUserRequest);
+	public ResponseEntity<UserResponseDTO> getUserByUsername(@RequestBody FindUserRequest findUserRequest) {
+		UserResponseDTO userResponseDTO = userService.userIsUser(findUserRequest);
 				
-		if (userDTO == null) {
+		if (userResponseDTO.getUserDto() == null) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(userDTO);
+		return ResponseEntity.ok(userResponseDTO);
 	}
 	
 		

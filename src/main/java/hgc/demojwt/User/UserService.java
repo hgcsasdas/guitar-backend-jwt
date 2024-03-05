@@ -63,15 +63,22 @@ public class UserService {
 		return null;
 	}
 
-	public UserDTO userIsUser(FindUserRequest findUserRequest) {
+	public UserResponseDTO userIsUser(FindUserRequest findUserRequest) {
 		Optional<Role> userRole = userRepository.findRoleByUsername(findUserRequest.getUsernameSearching());
 
-		if (userRole.isPresent() && userRole.get() == Role.ADMIN) {
-			return searchUserByUsername(findUserRequest.getUsernameToSearch());
-		} else if ((userRole.isPresent() && userRole.get() == Role.USER)
-				&& (findUserRequest.getUsernameSearching().equals(findUserRequest.getUsernameToSearch()))) {
-			return searchUserByUsername(findUserRequest.getUsernameToSearch());
-		}
+		if (userRole.isPresent() && (userRole.get() == Role.ADMIN || (findUserRequest.getUsernameSearching().equals(findUserRequest.getUsernameToSearch())))) {
+			
+			//crear el token y devolver la respuesta
+
+			UserDetails userDetails = userRepository.findByUsername(findUserRequest.getUsernameSearching()).orElseThrow();
+			String newToken = jwtService.getToken(userDetails);
+
+			UserDTO userDTO = searchUserByUsername(findUserRequest.getUsernameToSearch());
+
+			return UserResponseDTO(newToken, userDTO);
+		} 
+
+		
 		return null;
 	}
 
