@@ -13,6 +13,8 @@ import hgc.demojwt.User.Entitys.User;
 import hgc.demojwt.User.Requests.FindUserRequest;
 import hgc.demojwt.User.Requests.UserRequest;
 import hgc.demojwt.User.Responses.UserResponse;
+import hgc.demojwt.User.Responses.UserResponseDTO;
+import hgc.demojwt.User.Responses.UserRoleResponse;
 
 @Service
 public class UserService {
@@ -37,7 +39,6 @@ public class UserService {
 		String newToken = jwtService.getToken(userDetails);
 
 		return new UserResponse("El usuario se actualizó satisfactoriamente", newToken);
-	
 
 	}
 
@@ -66,20 +67,37 @@ public class UserService {
 	public UserResponseDTO userIsUser(FindUserRequest findUserRequest) {
 		Optional<Role> userRole = userRepository.findRoleByUsername(findUserRequest.getUsernameSearching());
 
-		if (userRole.isPresent() && (userRole.get() == Role.ADMIN || (findUserRequest.getUsernameSearching().equals(findUserRequest.getUsernameToSearch())))) {
-			
-			//crear el token y devolver la respuesta
+		if (userRole.isPresent() && (userRole.get() == Role.ROLE_ADMIN
+				|| (findUserRequest.getUsernameSearching().equals(findUserRequest.getUsernameToSearch())))) {
 
-			UserDetails userDetails = userRepository.findByUsername(findUserRequest.getUsernameSearching()).orElseThrow();
+			UserDetails userDetails = userRepository.findByUsername(findUserRequest.getUsernameSearching())
+					.orElseThrow();
 			String newToken = jwtService.getToken(userDetails);
 
 			UserDTO userDTO = searchUserByUsername(findUserRequest.getUsernameToSearch());
 
-			return UserResponseDTO(newToken, userDTO);
-		} 
+			UserResponseDTO userResponseDTO = new UserResponseDTO(newToken, userDTO);
 
-		
+			return userResponseDTO;
+		}
+
 		return null;
+	}
+
+	public UserRoleResponse getUserRole(FindUserRequest findUserRequest) {
+		Optional<Role> userRoleSearching = userRepository.findRoleByUsername(findUserRequest.getUsernameSearching());
+		Optional<Role> userRoleToSearch = userRepository.findRoleByUsername(findUserRequest.getUsernameToSearch());
+		UserRoleResponse userRoleResponse = new UserRoleResponse();
+		if (userRoleSearching.isPresent() && (userRoleSearching.get() == Role.ROLE_ADMIN
+				|| (findUserRequest.getUsernameSearching().equals(findUserRequest.getUsernameToSearch())))) {
+
+			userRoleResponse.setRol(userRoleToSearch.get());
+			return userRoleResponse;
+		} else {
+
+			return null;
+		}
+
 	}
 
 }

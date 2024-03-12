@@ -1,6 +1,6 @@
 package hgc.demojwt.User.Entitys;
 
 public enum Role {
-	ADMIN,
-	USER,
+	ROLE_ADMIN,
+	ROLE_USER,
 }

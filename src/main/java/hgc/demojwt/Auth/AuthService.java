@@ -39,22 +39,40 @@ public class AuthService {
 
 	}
 
-	public AuthResponse register(RegisterRequest request) {
-		User user = new User();
-		user.setUsername(request.getUsername());
-		user.setLastname(request.getLastName());
-		user.setFirstname(request.getFirstName());
-		user.setCountry(request.getCountry());
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
-		user.setRole(Role.USER);
+	public RegisterResponse register(RegisterRequest request) {
+		 RegisterResponse registerResponse = new RegisterResponse();
 
-		userRepository.save(user);
+		 System.out.println(registerResponse.toString());
+	        // Validar la longitud de la contraseña
+	        if (request.getPassword().length() < 8) {
+	            registerResponse.setMessage("La contraseña debe tener al menos 8 caracteres");
+	            return registerResponse;
+	        }
 
-		String token = jwtService.getToken(user);
+	        // Verificar si el usuario ya existe
+	        if (userRepository.existsByUsername(request.getUsername())) {
+	            registerResponse.setMessage("El nombre de usuario ya está en uso");
+	            return registerResponse;
+	        }
 
-		AuthResponse auth = new AuthResponse(token);
 
-		return auth;
+	        User user = new User();
+	        user.setUsername(request.getUsername());
+	        user.setLastname(request.getLastName());
+	        user.setFirstname(request.getFirstName());
+	        user.setCountry(request.getCountry());
+	        user.setPassword(passwordEncoder.encode(request.getPassword()));
+	        user.setRole(Role.ROLE_ADMIN);
+
+	        try {
+	            userRepository.save(user);
+	            registerResponse.setMessage("Usuario registrado correctamente");
+	            registerResponse.setRegister(true);
+	            return registerResponse;
+	        } catch (Exception e) {
+	            registerResponse.setMessage("Error al registrar el usuario, contacte al administrador");
+	            return registerResponse;
+	        }
 	}
 
 }

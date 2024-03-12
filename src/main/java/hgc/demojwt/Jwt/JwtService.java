@@ -31,8 +31,8 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                //.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 10 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                //.setExpiration(new Date(System.currentTimeMillis() + 1000 * 10 * 10))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -40,7 +40,7 @@ public class JwtService {
     public String refreshToken(String token) {
         final Claims claims = getAllClaims(token);
         final Date issuedAt = new Date();
-        final Date expirationDate = new Date(issuedAt.getTime() + 1000 * 60 * 30); // Establece la nueva fecha de expiración
+        final Date expirationDate = new Date(issuedAt.getTime() + 1000 * 60 * 30);
         
         return Jwts.builder()
                 .setClaims(claims)

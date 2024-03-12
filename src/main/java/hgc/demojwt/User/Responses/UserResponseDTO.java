@@ -4,14 +4,14 @@ import hgc.demojwt.User.DTO.UserDTO;
 
 public class UserResponseDTO {
 	String token;
-	UserDTO userDto;
+	UserDTO userDTO;
 	public UserResponseDTO() {
 		super();
 	}
 	public UserResponseDTO(String token, UserDTO userDto) {
 		super();
 		this.token = token;
-		this.userDto = userDto;
+		this.userDTO = userDto;
 	}
 	public String getToken() {
 		return token;
@@ -20,10 +20,10 @@ public class UserResponseDTO {
 		this.token = token;
 	}
 	public UserDTO getUserDto() {
-		return userDto;
+		return userDTO;
 	}
 	public void setUserDto(UserDTO userDto) {
-		this.userDto = userDto;
+		this.userDTO = userDto;
 	}
 	
 	

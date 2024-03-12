@@ -31,10 +31,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authRequest ->
                 authRequest
-                    //.requestMatchers("/auth/register").permitAll() // Permitir el registro sin autenticación
             		.requestMatchers(HttpMethod.GET).permitAll()
-                	.requestMatchers(HttpMethod.OPTIONS).permitAll()
+                	//.requestMatchers(HttpMethod.OPTIONS).permitAll()
             		.requestMatchers("/auth/**").permitAll()
+            		.requestMatchers("/api/v1/products").hasAuthority("ROLE_ADMIN")
+            		.requestMatchers("/api/v1/categories").hasAuthority("ROLE_ADMIN")
                 	//.requestMatchers("/**").permitAll()
                     .anyRequest().authenticated()
             )

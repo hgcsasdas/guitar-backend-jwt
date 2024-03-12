@@ -13,6 +13,8 @@ import hgc.demojwt.User.Entitys.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findByUsername(String username);
 
+	boolean existsByUsername(String username);
+
 	@Query("SELECT u.role FROM User u WHERE u.username = :username")
 	Optional<Role> findRoleByUsername(@Param("username") String username);
 
